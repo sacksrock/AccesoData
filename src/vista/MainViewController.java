@@ -97,31 +97,30 @@ public class MainViewController implements Initializable {
 	}
 
 	public void eventos() {
-
+		
 		datos.getSelectionModel().selectedItemProperty().addListener(
 
-				new ChangeListener<coche>() {
+		new ChangeListener<coche>() {
 
-					@Override
-					public void changed(ObservableValue<? extends coche> arg0, coche arg1, coche selectedValue) {
+		@Override	
+		public void changed(ObservableValue<? extends coche> arg0, coche arg1, coche selectedValue) {
 
-						txtmarca.setText(String.valueOf(selectedValue.getMarca()));
-						txtmodelo.setText(String.valueOf(selectedValue.getModelo()));
-						txtpeso.setText(String.valueOf(selectedValue.getPeso()));
-						txtmatricula.setText(String.valueOf(selectedValue.getMatricula()));
-						txtpeso.setText(String.valueOf(selectedValue.getColor()));
+		txtmarca.setText(String.valueOf(selectedValue.getMarca()));
+		txtmodelo.setText(String.valueOf(selectedValue.getModelo()));
+		txtpeso.setText(String.valueOf(selectedValue.getPeso()));
+		txtmatricula.setText(String.valueOf(selectedValue.getMatricula()));
+		txtpeso.setText(String.valueOf(selectedValue.getColor()));
 
-						btnEliminar.setDisable(false);
-						btnGuardar.setDisable(true);
-					}
-				});
-	}
+		btnEliminar.setDisable(false);
+		btnGuardar.setDisable(true);
+		}
+	});
+}
 
 	@FXML
 	public void saveRegistro() {
 		// Crear una nueva instancia del tipo coche
-		coche car = new coche(txtmarca.getText(), txtmodelo.getText(), txtpeso.getText(), txtmatricula.getText(),
-				txtcolor.getText());
+		coche car = new coche(txtmarca.getText(), txtmodelo.getText(), txtpeso.getText(), txtmatricula.getText(),txtcolor.getText());
 
 		// Llamar al metodo guardarRegistro de la clase coche
 		connection.establecerConexion();
@@ -137,6 +136,13 @@ public class MainViewController implements Initializable {
 			listacoches.clear();
 			refreshInfoTable();
 		}
+		else {
+			Alert msg = new Alert(AlertType.ERROR);
+			msg.setTitle("Error");
+			msg.setContentText("Todos los campos son obligatorios");
+			msg.setHeaderText("Resultado:");
+			msg.show();
+		}
 	}
 
 	@FXML
@@ -146,7 +152,7 @@ public class MainViewController implements Initializable {
 
 		int result = datos.getSelectionModel().getSelectedItem().removeRegistro(connection.getConexion());
 		
-		//connection.cerrarConexion();
+		connection.cerrarConexion();
 
 		if (result == 1) {
 			listacoches.remove(datos.getSelectionModel().getSelectedIndex());

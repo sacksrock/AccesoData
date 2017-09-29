@@ -39,7 +39,7 @@ public class coche {
 
 	public int removeRegistro(Connection connection) {
 		try {
-			PreparedStatement stmt = connection.prepareStatement("DELETE FROM juegos WHERE marca = ?");
+			PreparedStatement stmt = connection.prepareStatement("DELETE FROM coche WHERE marca = ?");
 			stmt.setString(1, marca);
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -49,7 +49,7 @@ public class coche {
 
 	}
 
-	public static void loadCoches(Connection connection, ObservableList<coche> lista) {
+	public static void loadCoches(Connection connection, ObservableList<coche> listacoches) {
 		try {
 
 			Statement stmt = connection.createStatement();
@@ -57,7 +57,7 @@ public class coche {
 			ResultSet rset = stmt.executeQuery("SELECT marca, modelo, peso, matricula, color FROM coche");
 
 			while (rset.next()) {
-				lista.add(new coche(rset.getString("marca"), rset.getString("modelo"), rset.getString("peso"),
+				listacoches.add(new coche(rset.getString("marca"), rset.getString("modelo"), rset.getString("peso"),
 						rset.getString("matricula"), rset.getString("color")));
 			}
 
