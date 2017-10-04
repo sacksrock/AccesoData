@@ -3,6 +3,7 @@ package modelo;
 import java.sql.*;
 
 import vista.MainViewController;
+import controlador.Main;
 
 public class conexion {
 	// Atributos de la clase

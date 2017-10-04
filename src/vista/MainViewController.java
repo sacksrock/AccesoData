@@ -19,7 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.coche;
 import modelo.conexion;
 
-public class MainViewController implements Initializable {
+public class MainViewController {
 	// columnas
 	@FXML
 	private TableView<coche> datos = new TableView<coche>();
@@ -58,7 +58,7 @@ public class MainViewController implements Initializable {
 	private conexion connection;
 
 	@FXML
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize() {
 		connection = new conexion();
 		connection.establecerConexion();
 		// Inicializar listas
@@ -149,13 +149,13 @@ public class MainViewController implements Initializable {
 	public void eliminarRegistro() {
 
 		connection.establecerConexion();
-
-		int result = datos.getSelectionModel().getSelectedItem().removeRegistro(connection.getConexion());
+		
+		int result = tblviewcoche.getSelectionModel().getSelectedItem().removeRegistro(connection.getConexion());
 		
 		connection.cerrarConexion();
 
 		if (result == 1) {
-			listacoches.remove(datos.getSelectionModel().getSelectedIndex());
+			listacoches.remove(tblviewcoche.getSelectionModel().getSelectedItem());
 			Alert msg = new Alert(AlertType.INFORMATION);
 
 			msg.setTitle("Coche Borrado");

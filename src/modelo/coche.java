@@ -3,6 +3,8 @@ package modelo;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.Statement;
+import controlador.Main;
+import vista.MainViewController;
 
 import javafx.collections.ObservableList;
 
@@ -37,9 +39,9 @@ public class coche {
 		}
 	}
 
-	public int removeRegistro(Connection connection) {
+	public int removeRegistro(Connection conexion) {
 		try {
-			PreparedStatement stmt = connection.prepareStatement("DELETE FROM coche WHERE marca = ?");
+			PreparedStatement stmt = conexion.prepareStatement("DELETE FROM coche WHERE marca = ?");
 			stmt.setString(1, marca);
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
