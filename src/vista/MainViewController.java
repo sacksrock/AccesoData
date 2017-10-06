@@ -226,6 +226,7 @@ public class MainViewController {
 			while ((str = in.readLine()) != null) {
 				list.add(str);
 			}
+			in.close();
 			Alert msg = new Alert(AlertType.INFORMATION);
 
 			msg.setTitle("Coches Insertados Desde Archivo");
@@ -271,6 +272,7 @@ public class MainViewController {
 				writer.write(rs.getString(4) + "\r\n");
 				writer.write(rs.getString(5) + "\r\n");
 			}
+			writer.close();
 			Alert msg = new Alert(AlertType.INFORMATION);
 
 			msg.setTitle("Coches Insertados Desde BBDD");
