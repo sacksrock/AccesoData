@@ -1,13 +1,14 @@
 package vista;
 
+import java.util.List;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,6 +58,8 @@ public class MainViewController {
 	private Button btnEliminar;
 	@FXML
 	private Button btnEliminarTodos;
+	@FXML
+	private Button btnCargarFichero;
 
 	@FXML
 	private TableView<coche> tblviewcoche;
@@ -65,8 +68,8 @@ public class MainViewController {
 
 	private static conexion conexion;
 
-	File FicheroDatos = new File("FicheroDatos.txt");
-	ArrayList<coche> data = new ArrayList<coche>();
+	// File FicheroDatos = new File("FicheroDatos.txt");
+	// ArrayList<coche> data = new ArrayList<coche>();
 
 	@FXML
 	public void initialize() {
@@ -180,18 +183,17 @@ public class MainViewController {
 			msg.setHeaderText("Resultado:");
 			msg.show();
 		}
-		
+
 	}
+
 	@FXML
 	public void eliminarTodos() {
 
 		conexion = new conexion();
 
-		int result; //= //new coche().removeAll(conexion);
+		int result = new coche(null, null, null, null, null).removeAll(conexion.getConexion());
 
-		conexion.cerrarConexion();
-
-		if (result == 1) {
+		if (result == 0) {
 			listacoches.remove(tblviewcoche.getSelectionModel().getSelectedItem());
 			Alert msg = new Alert(AlertType.INFORMATION);
 
@@ -199,7 +201,8 @@ public class MainViewController {
 			msg.setContentText("Los coches han sido borrado en la base de datos");
 			msg.setHeaderText("Resultado:");
 			msg.show();
-			datos.refresh();
+			listacoches.clear();
+			refreshInfoTable();
 		} else {
 			Alert msg = new Alert(AlertType.ERROR);
 			msg.setTitle("Error");
@@ -207,11 +210,37 @@ public class MainViewController {
 			msg.setHeaderText("Resultado:");
 			msg.show();
 		}
-		
 	}
-	
+
 	@FXML
-	public void cargarFichero() {
-		
+	public void Cargar() {
+		conexion = new conexion();
+		Connection con = conexion.getConexion();
+		PreparedStatement pst;
+		String sql = "INSERT INTO coche (marca, modelo, peso, matricula, color) " + "VALUES (?, ?, ?, ?, ?)";
+		try {
+			BufferedReader in = new BufferedReader(
+					new FileReader("C:/Users/daniel.iglesia/eclipse-workspace/A01/src/FicheroDatos.txt"));
+			String str;
+
+			List<String> list = new ArrayList<String>();
+			while ((str = in.readLine()) != null) {
+				list.add(str);
+			}
+			String[] stringArr = list.toArray(new String[0]);
+			int count = 1;
+			pst = con.prepareStatement(sql);
+			for (String string : stringArr) {
+				pst.setString(count, string);
+				if (count % 5 == 0) {
+					pst.executeUpdate();
+					count = 0;
+				}
+				count++;
+			}
+			pst.close();
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
