@@ -2,20 +2,17 @@ package vista;
 
 import java.util.List;
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -60,6 +57,8 @@ public class MainViewController {
 	private Button btnEliminarTodos;
 	@FXML
 	private Button btnCargarFichero;
+	@FXML
+	private Button btnCargarBDD;
 
 	@FXML
 	private TableView<coche> tblviewcoche;
@@ -67,9 +66,8 @@ public class MainViewController {
 	private ObservableList<coche> listacoches;
 
 	private static conexion conexion;
-
-	// File FicheroDatos = new File("FicheroDatos.txt");
-	// ArrayList<coche> data = new ArrayList<coche>();
+	
+	private static BufferedWriter writer;
 
 	@FXML
 	public void initialize() {
@@ -192,6 +190,7 @@ public class MainViewController {
 		conexion = new conexion();
 
 		int result = new coche(null, null, null, null, null).removeAll(conexion.getConexion());
+		
 
 		if (result == 0) {
 			listacoches.remove(tblviewcoche.getSelectionModel().getSelectedItem());
@@ -227,6 +226,13 @@ public class MainViewController {
 			while ((str = in.readLine()) != null) {
 				list.add(str);
 			}
+			Alert msg = new Alert(AlertType.INFORMATION);
+
+			msg.setTitle("Coches Insertados Desde Archivo");
+			msg.setContentText("Los coches han sido insertados en la base de datos");
+			msg.setHeaderText("Resultado:");
+			msg.show();
+
 			String[] stringArr = list.toArray(new String[0]);
 			int count = 1;
 			pst = con.prepareStatement(sql);
@@ -239,6 +245,39 @@ public class MainViewController {
 				count++;
 			}
 			pst.close();
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		}
+		listacoches.clear();
+		refreshInfoTable();
+	}
+
+	@FXML
+	public void BBDD() {
+		conexion = new conexion();
+		Connection con = conexion.getConexion();
+		PreparedStatement pst;
+		ResultSet rs;
+		String sql = "SELECT marca, modelo, peso, matricula, color FROM coche";
+
+		try {
+			writer = new BufferedWriter(new FileWriter("C:/Users/daniel.iglesia/eclipse-workspace/A01/src/FicheroDatos.txt", true));
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				writer.write(rs.getString(1) + "\r\n");
+				writer.write(rs.getString(2) + "\r\n");
+				writer.write(rs.getString(3) + "\r\n");
+				writer.write(rs.getString(4) + "\r\n");
+				writer.write(rs.getString(5) + "\r\n");
+			}
+			Alert msg = new Alert(AlertType.INFORMATION);
+
+			msg.setTitle("Coches Insertados Desde BBDD");
+			msg.setContentText("Los coches han sido insertados en el fichero");
+			msg.setHeaderText("Resultado:");
+			msg.show();
+
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
