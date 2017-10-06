@@ -1,7 +1,13 @@
 package vista;
 
+import java.io.File;
 import java.net.URL;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -49,25 +55,29 @@ public class MainViewController {
 	private Button btnGuardar;
 	@FXML
 	private Button btnEliminar;
+	@FXML
+	private Button btnEliminarTodos;
 
 	@FXML
 	private TableView<coche> tblviewcoche;
 
 	private ObservableList<coche> listacoches;
 
-	private conexion connection;
+	private static conexion conexion;
+
+	File FicheroDatos = new File("FicheroDatos.txt");
+	ArrayList<coche> data = new ArrayList<coche>();
 
 	@FXML
 	public void initialize() {
-		connection = new conexion();
-		connection.establecerConexion();
+		conexion = new conexion();
 		// Inicializar listas
 
 		listacoches = FXCollections.observableArrayList();
 
 		// Llenar listas
 
-		coche.llenarInformacionAlumnos(connection.getConexion(), listacoches);
+		coche.llenarInformacionAlumnos(conexion.getConexion(), listacoches);
 
 		// Enlazar listas con ComboBox y TableView
 
@@ -80,12 +90,12 @@ public class MainViewController {
 		colmatricula.setCellValueFactory(new PropertyValueFactory<coche, String>("matricula"));
 		colcolor.setCellValueFactory(new PropertyValueFactory<coche, String>("color"));
 
-		connection.cerrarConexion();
+		conexion.cerrarConexion();
 	}
 
 	public void refreshInfoTable() {
 
-		coche.loadCoches(connection.getConexion(), listacoches);
+		coche.loadCoches(conexion.getConexion(), listacoches);
 
 		datos.setItems(listacoches);
 
@@ -124,8 +134,8 @@ public class MainViewController {
 				txtcolor.getText());
 
 		// Llamar al metodo guardarRegistro de la clase coche
-		connection.establecerConexion();
-		int resultado = car.guardarCoche(connection.getConexion());
+		conexion = new conexion();
+		int resultado = car.guardarCoche(conexion.getConexion());
 
 		if (resultado == 1) {
 
@@ -148,11 +158,11 @@ public class MainViewController {
 	@FXML
 	public void eliminarRegistro() {
 
-		connection.establecerConexion();
+		conexion = new conexion();
 
-		int result = tblviewcoche.getSelectionModel().getSelectedItem().removeRegistro(connection.getConexion());
+		int result = tblviewcoche.getSelectionModel().getSelectedItem().removeRegistro(conexion.getConexion());
 
-		connection.cerrarConexion();
+		conexion.cerrarConexion();
 
 		if (result == 1) {
 			listacoches.remove(tblviewcoche.getSelectionModel().getSelectedItem());
@@ -170,8 +180,36 @@ public class MainViewController {
 			msg.setHeaderText("Resultado:");
 			msg.show();
 		}
+		
 	}
+	@FXML
+	public void eliminarTodos() {
 
+		conexion = new conexion();
+
+		int result; //= //new coche().removeAll(conexion);
+
+		conexion.cerrarConexion();
+
+		if (result == 1) {
+			listacoches.remove(tblviewcoche.getSelectionModel().getSelectedItem());
+			Alert msg = new Alert(AlertType.INFORMATION);
+
+			msg.setTitle("Coches Borrados");
+			msg.setContentText("Los coches han sido borrado en la base de datos");
+			msg.setHeaderText("Resultado:");
+			msg.show();
+			datos.refresh();
+		} else {
+			Alert msg = new Alert(AlertType.ERROR);
+			msg.setTitle("Error");
+			msg.setContentText("Los coches no se han podido borrar a la base de datos");
+			msg.setHeaderText("Resultado:");
+			msg.show();
+		}
+		
+	}
+	
 	@FXML
 	public void cargarFichero() {
 		

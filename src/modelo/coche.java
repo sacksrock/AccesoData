@@ -1,8 +1,11 @@
 package modelo;
 
+import java.io.File;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import controlador.Main;
 import vista.MainViewController;
 
@@ -14,6 +17,7 @@ public class coche {
 	private String peso;
 	private String matricula;
 	private String color;
+	
 
 	public coche(String marca, String modelo, String peso, String matricula, String color) {
 		this.marca = marca;
@@ -43,6 +47,16 @@ public class coche {
 		try {
 			PreparedStatement stmt = conexion.prepareStatement("DELETE FROM coche WHERE marca = ?");
 			stmt.setString(1, marca);
+			return stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+
+	}
+	public int removeAll(Connection conexion) {
+		try {
+			PreparedStatement stmt = conexion.prepareStatement("TRUNCATE coche");
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -83,7 +97,7 @@ public class coche {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public String getMarca() {
 		return marca;
 	}
@@ -123,5 +137,7 @@ public class coche {
 	public void setColor(String color) {
 		this.color = color;
 	}
+	
+	
 
 }

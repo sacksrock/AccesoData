@@ -7,17 +7,17 @@ import controlador.Main;
 
 public class conexion {
 	// Atributos de la clase
-	private java.sql.Connection connection;
-	private String url = "jdbc:mysql://localhost/coche";
-	private String usuario = "root";
-	private String contrasena = "";
+	private static Connection conexion = null;
+	private static String url = "jdbc:mysql://localhost/coche";
+	private static String usuario = "root";
+	private static String contrasena = "";
 	private MainViewController mainView;
 
-	public void establecerConexion() {
+	public conexion() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-			connection = DriverManager.getConnection(url, usuario, contrasena);
+			conexion = DriverManager.getConnection(url, usuario, contrasena);
 			
 			System.out.println("-Conexion Establecida-");
 		} catch (Exception e) {
@@ -25,6 +25,7 @@ public class conexion {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public void setMainView(MainViewController mainView) {
 		this.mainView=mainView;
@@ -34,17 +35,13 @@ public class conexion {
 		return mainView;
 	}
 	
-	public java.sql.Connection getConexion(){
-		return connection;
-	}
-	
-	public void setConexion(java.sql.Connection connection ) {
-		this.connection = connection;
+	public Connection getConexion(){
+		return conexion;
 	}
 	
 	public void cerrarConexion() {
 		try {
-			connection.close();
+			conexion.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -30,6 +30,7 @@
       <Label layoutX="630.0" layoutY="225.0" prefHeight="25.0" prefWidth="114.0" text="COLOR" />
       <Button fx:id="btnGuardar" layoutX="585.0" layoutY="311.0" mnemonicParsing="false" onAction="#saveRegistro" prefHeight="25.0" prefWidth="72.0" text="GUARDAR" />
       <Button fx:id="btnEliminar" layoutX="665.0" layoutY="311.0" mnemonicParsing="false" onAction="#eliminarRegistro" prefHeight="25.0" prefWidth="72.0" text="ELIMINAR" />
+      <Button fx:id="btnEliminarTodos" layoutX="585.0" layoutY="343.0" mnemonicParsing="false" onAction="#eliminarTodos" prefHeight="25.0" prefWidth="153.0" text="ELIMINARTODOS" />
 
    </children>
 </AnchorPane>
