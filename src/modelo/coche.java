@@ -12,6 +12,7 @@ import vista.MainViewController;
 import javafx.collections.ObservableList;
 
 public class coche {
+	private int idMarca;
 	private String marca;
 	private String modelo;
 	private String peso;
@@ -25,18 +26,19 @@ public class coche {
 		this.peso = peso;
 		this.matricula = matricula;
 		this.color = color;
+		this.idMarca = new marca().getIdMarca(this.marca);
 	}
 
 	public int guardarCoche(Connection connection) {
 		try {
 			PreparedStatement instruccion = connection.prepareStatement(
 					"INSERT INTO coche (marca, modelo, peso, matricula, color) " + "VALUES (?, ?, ?, ?, ?)");
-			instruccion.setString(1, marca);
-			instruccion.setString(2, modelo);
-			instruccion.setString(3, peso);
-			instruccion.setString(4, matricula);
-			instruccion.setString(5, color);
-			return instruccion.executeUpdate();
+			instruccion.setInt(1, idMarca);
+			instruccion.setString(1, modelo);
+			instruccion.setString(2, peso);
+			instruccion.setString(3, matricula);
+			instruccion.setString(4, color);
+			return instruccion.executeUpdate();		
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
@@ -45,8 +47,8 @@ public class coche {
 
 	public int removeRegistro(Connection conexion) {
 		try {
-			PreparedStatement stmt = conexion.prepareStatement("DELETE FROM coche WHERE marca = ?");
-			stmt.setString(1, marca);
+			PreparedStatement stmt = conexion.prepareStatement("DELETE FROM coche WHERE matricula = ?");
+			stmt.setString(3, matricula);
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -70,10 +72,10 @@ public class coche {
 
 			Statement stmt = connection.createStatement();
 
-			ResultSet rset = stmt.executeQuery("SELECT marca, modelo, peso, matricula, color FROM coche");
+			ResultSet rset = stmt.executeQuery("SELECT marca.nombre, modelo, peso, matricula, color FROM coche LEFT JOIN marca ON marca.idMarca = coche.Marca");
 
 			while (rset.next()) {
-				listacoches.add(new coche(rset.getString("marca"), rset.getString("modelo"), rset.getString("peso"),
+				listacoches.add(new coche(rset.getString("marca.nombre"), rset.getString("modelo"), rset.getString("peso"),
 						rset.getString("matricula"), rset.getString("color")));
 			}
 
@@ -82,13 +84,11 @@ public class coche {
 		}
 	}
 
-	public static void llenarInformacionAlumnos(Connection connection, ObservableList<coche> lista) {
+	public static void llenarInformacionCoche(Connection connection, ObservableList<coche> lista) {
 		try {
 			Statement instruccion = connection.createStatement();
 			ResultSet resultado = instruccion
-					.executeQuery("SELECT marca, " + "modelo, " + "peso, " + "matricula, " + "color " + "FROM coche "
-
-			);
+					.executeQuery("SELECT marca.nombre AS marca, modelo, peso, matricula, color FROM coche LEFT JOIN marca ON marca.idMarca = coche.Marca");
 			while (resultado.next()) {
 				lista.add(new coche(resultado.getString("marca"), resultado.getString("modelo"),
 						resultado.getString("peso"), resultado.getString("matricula"), resultado.getString("color")));

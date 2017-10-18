@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -18,7 +19,6 @@
             <TableColumn fx:id="colcolor" prefWidth="125.0" text="Color" />
         </columns>
       </TableView>
-      <TextField fx:id="txtmarca" layoutX="630.0" layoutY="43.0" prefHeight="25.0" prefWidth="185.0" />
       <TextField fx:id="txtmodelo" layoutX="630.0" layoutY="97.0" prefHeight="25.0" prefWidth="185.0" />
       <TextField fx:id="txtpeso" layoutX="630.0" layoutY="149.0" prefHeight="25.0" prefWidth="185.0" />
       <TextField fx:id="txtmatricula" layoutX="630.0" layoutY="200.0" prefHeight="25.0" prefWidth="185.0" />
@@ -32,7 +32,8 @@
       <Button fx:id="btnEliminar" layoutX="786.0" layoutY="281.0" mnemonicParsing="false" onAction="#eliminarRegistro" prefHeight="25.0" prefWidth="72.0" text="ELIMINAR" />
       <Button fx:id="btnEliminarTodos" layoutX="587.0" layoutY="281.0" mnemonicParsing="false" onAction="#eliminarTodos" prefHeight="25.0" prefWidth="153.0" text="ELIMINARTODOS" />
       <Button fx:id="btnCargarFichero" layoutX="587.0" layoutY="319.0" mnemonicParsing="false" onAction="#Cargar" prefHeight="25.0" prefWidth="153.0" text="ARCHIVOABDD" />
-      <Button fx:id="btnCargarBDD" layoutX="587.0" layoutY="355.0" mnemonicParsing="false" onAction="#BBDD" prefHeight="25.0" prefWidth="153.0" text="BDDAARCHIVO" />	
+      <Button fx:id="btnCargarBDD" layoutX="587.0" layoutY="355.0" mnemonicParsing="false" onAction="#BBDD" prefHeight="25.0" prefWidth="153.0" text="BDDAARCHIVO" />
+      <ComboBox fx:id="boxmarca" layoutX="630.0" layoutY="43.0" prefWidth="150.0" />	
 		
    </children>
 </AnchorPane>

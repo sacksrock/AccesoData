@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -40,7 +41,7 @@ public class MainViewController {
 	// botones y textfield
 
 	@FXML
-	private TextField txtmarca;
+	private ComboBox<String> boxmarca;
 	@FXML
 	private TextField txtmodelo;
 	@FXML
@@ -64,6 +65,8 @@ public class MainViewController {
 	private TableView<coche> tblviewcoche;
 
 	private ObservableList<coche> listacoches;
+	
+	private ObservableList<String> listamarcas;
 
 	private static conexion conexion;
 	
@@ -75,10 +78,12 @@ public class MainViewController {
 		// Inicializar listas
 
 		listacoches = FXCollections.observableArrayList();
+		
+		listamarcas = FXCollections.observableArrayList();
 
 		// Llenar listas
 
-		coche.llenarInformacionAlumnos(conexion.getConexion(), listacoches);
+		coche.llenarInformacionCoche(conexion.getConexion(), listacoches);
 
 		// Enlazar listas con ComboBox y TableView
 
@@ -90,7 +95,13 @@ public class MainViewController {
 		colpeso.setCellValueFactory(new PropertyValueFactory<coche, String>("peso"));
 		colmatricula.setCellValueFactory(new PropertyValueFactory<coche, String>("matricula"));
 		colcolor.setCellValueFactory(new PropertyValueFactory<coche, String>("color"));
-
+		
+		for (int i = 0; i < listacoches.size(); i++) {
+			listamarcas.add(listacoches.get(i).getMarca());
+		}
+		
+		boxmarca.getItems().addAll(listamarcas);
+		
 		conexion.cerrarConexion();
 	}
 
@@ -116,7 +127,7 @@ public class MainViewController {
 					@Override
 					public void changed(ObservableValue<? extends coche> arg0, coche arg1, coche selectedValue) {
 
-						txtmarca.setText(String.valueOf(selectedValue.getMarca()));
+						boxmarca.setPromptText(String.valueOf(selectedValue.getMarca()));
 						txtmodelo.setText(String.valueOf(selectedValue.getModelo()));
 						txtpeso.setText(String.valueOf(selectedValue.getPeso()));
 						txtmatricula.setText(String.valueOf(selectedValue.getMatricula()));
@@ -131,7 +142,7 @@ public class MainViewController {
 	@FXML
 	public void saveRegistro() {
 		// Crear una nueva instancia del tipo coche
-		coche car = new coche(txtmarca.getText(), txtmodelo.getText(), txtpeso.getText(), txtmatricula.getText(),
+		coche car = new coche(boxmarca.getPromptText(), txtmodelo.getText(), txtpeso.getText(), txtmatricula.getText(),
 				txtcolor.getText());
 
 		// Llamar al metodo guardarRegistro de la clase coche
